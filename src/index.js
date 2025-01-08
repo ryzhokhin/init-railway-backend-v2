@@ -21,10 +21,17 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true // Разрешите отправку cookies/credentials
 }));
-app.options('*', cors());
 // Проверка подключения к базе данных
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'https://zhiroazhigatel.netlify.app'); // Ваш фронтенд-домен
+    res.setHeader('Access-Control-Allow-Credentials', 'true'); // Обязательно для cookies/credentials
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE'); // Поддерживаемые методы
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type'); // Обязательно, если передаются данные
+    next();
+});
+
+
 app.get('/test-db', async (req, res) => {
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
     try {
         const connection = await mysql.createConnection(process.env.MYSQL_URL);
         console.log("Database connected!");
