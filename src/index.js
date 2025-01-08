@@ -12,9 +12,9 @@ app.use(bodyParser.json());
 
 // Настройка CORS с указанием разрешённого фронтенд-домена
 app.use(cors({
-    origin: 'https://zhiroazhigatel.netlify.app/', // Замените на ваш реальный фронтенд-домен
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true // Если вы передаёте куки или заголовки авторизации
+    origin: '*', // Замените на ваш реальный фронтенд-домен
+    // methods: ["GET", "POST", "PUT", "DELETE"],
+    // credentials: true // Если вы передаёте куки или заголовки авторизации
 }));
 // Проверка подключения к базе данных
 app.get('/test-db', async (req, res) => {
