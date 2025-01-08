@@ -12,9 +12,9 @@ app.use(bodyParser.json());
 
 // Настройка CORS с указанием разрешённого фронтенд-домена
 app.use(cors({
-    origin: '*', // Замените на ваш реальный фронтенд-домен
-    // methods: ["GET", "POST", "PUT", "DELETE"],
-    // credentials: true // Если вы передаёте куки или заголовки авторизации
+    origin: "http://localhost:3001", // Укажите URL вашего фронтенда
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true // Разрешите отправку cookies/credentials
 }));
 // Проверка подключения к базе данных
 app.get('/test-db', async (req, res) => {
