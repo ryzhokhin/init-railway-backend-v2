@@ -21,6 +21,9 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true // Разрешите отправку cookies/credentials
 }));
+
+// testing without headers
+
 // Проверка подключения к базе данных
 // app.use((req, res, next) => {
 //     res.setHeader('Access-Control-Allow-Origin', 'https://zhiroazhigatel.netlify.app'); // Ваш фронтенд-домен
