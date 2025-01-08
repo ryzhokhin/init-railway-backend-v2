@@ -11,8 +11,13 @@ app.use(bodyParser.json());
 
 
 // Настройка CORS с указанием разрешённого фронтенд-домена
+// app.use(cors({
+//     origin: "http://localhost:3001", // Укажите URL вашего фронтенда
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     credentials: true // Разрешите отправку cookies/credentials
+// }));
 app.use(cors({
-    origin: "http://localhost:3001", // Укажите URL вашего фронтенда
+    origin: "https://zhiroazhigatel.netlify.app/", // Укажите URL вашего фронтенда
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true // Разрешите отправку cookies/credentials
 }));
