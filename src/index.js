@@ -30,7 +30,7 @@ app.use((req, res, next) => {
     next();
 });
 
-
+//илья проиграл мне спор!!!
 app.get('/test-db', async (req, res) => {
     try {
         const connection = await mysql.createConnection(process.env.MYSQL_URL);
