@@ -8,6 +8,10 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+app.use(cors({
+    origin: "https://zhiroazhigatel.netlify.app/"
+}))
+
 // Проверка подключения к базе данных
 app.get('/test-db', async (req, res) => {
     try {
