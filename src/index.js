@@ -35,6 +35,7 @@ app.use('/test', testRoutes);
 
 app.use((req, res, next) => {
     console.log(`Received request: ${req.method} ${req.url}`);
+    console.log("Requested");
     next();
 });
 
