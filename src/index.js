@@ -21,8 +21,10 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true // Разрешите отправку cookies/credentials
 }));
+app.options('*', cors());
 // Проверка подключения к базе данных
 app.get('/test-db', async (req, res) => {
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
     try {
         const connection = await mysql.createConnection(process.env.MYSQL_URL);
         console.log("Database connected!");
