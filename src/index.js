@@ -27,10 +27,12 @@ app.use((req, res, next) => {
 
 // routes connections
 const testRoutes = require('./routes/test');
+const setupRoutes = require('./routes/setup');
 
 
 // routes application
 app.use('/test', testRoutes);
+app.use('/setup', setupRoutes);
 
 
 app.use((req, res, next) => {
