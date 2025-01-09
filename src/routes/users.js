@@ -33,9 +33,9 @@ router.post('/login', async (req, res) => {
 
             return res.status(200).json({
                 id: existingUser[0].id,
-                telegram_id: existingUser[0].telegram_ID,
+                telegram_id: existingUser[0].telegram_id,
                 first_name: existingUser[0].first_name,
-                registration_date: existingUser[0].date_registered,
+                registration_date: existingUser[0].registration_date,
                 last_login: new Date().toISOString(),
             });
         }
