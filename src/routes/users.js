@@ -11,14 +11,14 @@ router.post('/login', async (req, res) => {
 
     try {
         const [existingUser] = await db.query(
-            'SELECT * FROM users WHERE telegram_id = ?',
+            'SELECT * FROM USERS_TABLE WHERE telegram_id = ?',
             [telegram_id]
         );
 
         if (existingUser.length === 0) {
             // Если пользователь не найден, создаем новую запись
             await db.query(`
-                INSERT INTO users (telegram_id, first_name, date_registered, date_last_login)
+                INSERT INTO USERS_TABLE (telegram_id, first_name, date_registered, date_last_login)
                 VALUES (?, ?, NOW(), NOW())
             `, [telegram_id, first_name]);
 
@@ -32,7 +32,7 @@ router.post('/login', async (req, res) => {
         } else {
             // Если пользователь найден, обновляем дату последнего входа
             await db.query(`
-                UPDATE users SET date_last_login = NOW() WHERE telegram_id = ?
+                UPDATE USERS_TABLE SET date_last_login = NOW() WHERE telegram_id = ?
             `, [telegram_id]);
 
             return res.status(200).json({
