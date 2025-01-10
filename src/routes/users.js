@@ -16,7 +16,6 @@ router.post('/login', async (req, res) => {
         );
 
         if (existingUser.length === 0) {
-            // Если пользователь не найден, создаем новую запись
             await db.query(`
                 INSERT INTO USERS_TABLE (telegram_id, first_name, date_registered, date_last_login)
                 VALUES (?, ?, NOW(), NOW())
@@ -30,7 +29,6 @@ router.post('/login', async (req, res) => {
                 date_last_login: new Date().toISOString(),
             });
         } else {
-            // Если пользователь найден, обновляем дату последнего входа
             await db.query(`
                 UPDATE USERS_TABLE SET date_last_login = NOW() WHERE telegram_id = ?
             `, [telegram_id]);
