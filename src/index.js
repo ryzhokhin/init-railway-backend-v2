@@ -32,6 +32,7 @@ const testRoutes = require('./routes/test');
 const setupRoutes = require('./routes/setup');
 const userRoutes = require('./routes/users');
 const insertMealPlans = require('./routes/insertMealPlans');
+const guidesRoutes = require('./routes/guides');
 
 
 // routes application
@@ -39,6 +40,7 @@ app.use('/test', testRoutes);
 app.use('/setup', setupRoutes);
 app.use('/users', userRoutes);
 app.use('/mealplans', insertMealPlans);
+app.use('/guides', guidesRoutes);
 
 
 app.use((req, res, next) => {
