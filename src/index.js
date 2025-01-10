@@ -31,12 +31,14 @@ app.use(cors({
 const testRoutes = require('./routes/test');
 const setupRoutes = require('./routes/setup');
 const userRoutes = require('./routes/users');
+const insertMealPlans = require('./routes/insertMealPlans');
 
 
 // routes application
 app.use('/test', testRoutes);
 app.use('/setup', setupRoutes);
 app.use('/users', userRoutes);
+app.use('/mealplans', insertMealPlans);
 
 
 app.use((req, res, next) => {
