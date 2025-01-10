@@ -11,6 +11,7 @@ app.use(cors({
     origin: 'https://zhiroazhigatel.netlify.app/', // Укажите URL вашего фронтенда
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, // Разрешите отправку cookies/credentials
+    allowedHeaders: ['Content-Type']
 }));
 app.options('*', cors());
 
