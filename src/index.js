@@ -13,7 +13,6 @@ app.use(cors({
     credentials: true, // Разрешите отправку cookies/credentials
     allowedHeaders: ['Content-Type']
 }));
-app.options('*', cors());
 
 // testing without headers
 
