@@ -3,6 +3,10 @@ const router = express.Router();
 const db = require('../db/connection');
 
 router.post('/login', async (req, res) => {
+    // Логирование тела запроса для отладки
+    console.log("Headers:", req.headers);
+    console.log("Request Body:", req.body);
+
     const { telegram_id, first_name } = req.body;
 
     if (!telegram_id || !first_name) {
