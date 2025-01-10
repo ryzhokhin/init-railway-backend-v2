@@ -33,6 +33,7 @@ const setupRoutes = require('./routes/setup');
 const userRoutes = require('./routes/users');
 const insertMealPlans = require('./routes/insertMealPlans');
 const guidesRoutes = require('./routes/guides');
+const mealPlansDaysRoutes = require('./routes/mealplans-days');
 
 
 // routes application
@@ -41,7 +42,7 @@ app.use('/setup', setupRoutes);
 app.use('/users', userRoutes);
 app.use('/mealplans', insertMealPlans);
 app.use('/guides', guidesRoutes);
-
+app.use('/mealplans-days', mealPlansDaysRoutes);
 
 app.use((req, res, next) => {
     console.log(`Received request: ${req.method} ${req.url}`);
