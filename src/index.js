@@ -15,16 +15,16 @@ app.use(cors({
 }));
 
 // testing without headers
-
-// Проверка подключения к базе данных
-app.use((req, res, next) => {
-    console.log("Request Headers:", req.headers);
-    res.setHeader('Access-Control-Allow-Origin', 'https://zhiroazhigatel.netlify.app'); // Ваш фронтенд-домен
-    res.setHeader('Access-Control-Allow-Credentials', 'true'); // Обязательно для cookies/credentials
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE'); // Поддерживаемые методы
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type'); // Обязательно, если передаются данные
-    next();
-});
+//
+// // Проверка подключения к базе данных
+// app.use((req, res, next) => {
+//     console.log("Request Headers:", req.headers);
+//     res.setHeader('Access-Control-Allow-Origin', 'https://zhiroazhigatel.netlify.app'); // Ваш фронтенд-домен
+//     res.setHeader('Access-Control-Allow-Credentials', 'true'); // Обязательно для cookies/credentials
+//     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE'); // Поддерживаемые методы
+//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type'); // Обязательно, если передаются данные
+//     next();
+// });
 
 
 // routes connections
