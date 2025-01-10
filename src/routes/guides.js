@@ -8,13 +8,10 @@ router.get('/all', async (req, res) => {
        if(guides.length === 0){
            return res.status(404).json({error: 'No guides found'});
        }
-       res.status(200).json({
-           message: "Guides fetched successfully",
-           guides,
-       });
+       res.status(200).json(guides);
    } catch (error) {
        console.error("Error fetching guids:", error);
-       res.status(500).json({error: 'Server error'});
+       res.status(  500).json({error: 'Server error'});
    }
 });
 
