@@ -3,6 +3,9 @@ const router = express.Router();
 const db = require('../db/connection');
 
 router.post('/login', async (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', 'https://zhiroazhigatel.netlify.app'); // Укажите фронтенд-домен
+    res.setHeader('Access-Control-Allow-Credentials', 'true'); // Позволить cookies
+
     const { telegram_id, first_name } = req.body;
 
     if (!telegram_id || !first_name) {
