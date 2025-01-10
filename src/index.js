@@ -10,8 +10,7 @@ app.use(bodyParser.json());
 app.use(cors({
     origin: 'https://zhiroazhigatel.netlify.app/', // Укажите URL вашего фронтенда
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true, // Разрешите отправку cookies/credentials
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true // Разрешите отправку cookies/credentials
 }));
 
 // testing without headers
@@ -21,7 +20,7 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', 'https://zhiroazhigatel.netlify.app/'); // Ваш фронтенд-домен
     res.setHeader('Access-Control-Allow-Credentials', 'true'); // Обязательно для cookies/credentials
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE'); // Поддерживаемые методы
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Обязательно, если передаются данные
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type'); // Обязательно, если передаются данные
     next();
 });
 
