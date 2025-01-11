@@ -36,19 +36,19 @@ router.post('/add', async (req, res) => {
     const { user_id, guide_id } = req.body;
 
     if (!user_id || !guide_id) {
-        return res.status(400).json({ message: 'User ID and Guide ID are required' });
+        return res.status(400).json({ error: "user_id and guide_id are required." });
     }
 
     try {
-        const addedDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
-        await db.query(
-            `INSERT INTO USER_GUIDE_TABLE (user_id, guide_id, added_date) VALUES (?, ?, ?)`,
-            [user_id, guide_id, addedDate]
-        );
-        res.status(201).json({ message: 'Guide added to user library successfully!' });
+        const query = `
+            INSERT INTO USER_GUIDE_TABLE (user_id, guide_id, added_date)
+            VALUES (?, ?, NOW())
+        `;
+        await db.query(query, [user_id, guide_id]);
+        res.status(200).json({ message: "Guide successfully added to user library!" });
     } catch (error) {
-        console.error('Error adding guide to user library:', error);
-        res.status(500).json({ message: 'Failed to add guide to user library' });
+        console.error("Error adding guide to library:", error);
+        res.status(500).json({ error: "Failed to add guide to library." });
     }
 });
 
