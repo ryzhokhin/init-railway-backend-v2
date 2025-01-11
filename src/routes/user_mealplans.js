@@ -17,10 +17,22 @@ router.post('/save-mealplan', async (req, res) => {
         );
 
         if (existingPlans.length > 0) {
-            return res.status(409).json({ message: 'Пользователь уже имеет план питания.' });
+            const currentPlanId = existingPlans[0].meal_plan_id;
+
+            // Если текущий план отличается от нового, обновляем его
+            if (currentPlanId !== mealPlanId) {
+                await db.query(
+                    'UPDATE USER_MEALS_TABLE SET meal_plan_id = ?, added_date = NOW() WHERE user_id = ?',
+                    [mealPlanId, userId]
+                );
+                return res.status(200).json({ message: 'План питания обновлен.' });
+            }
+
+            // Если план тот же, возвращаем сообщение
+            return res.status(200).json({ message: 'План питания уже актуален.' });
         }
 
-        // Если планов нет, добавляем новый
+        // Если у пользователя нет плана, создаем новый
         await db.query(
             'INSERT INTO USER_MEALS_TABLE (user_id, meal_plan_id, added_date) VALUES (?, ?, NOW())',
             [userId, mealPlanId]
