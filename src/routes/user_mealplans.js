@@ -7,18 +7,29 @@ router.post('/save-mealplan', async (req, res) => {
         const { userId, mealPlanId } = req.body;
 
         if (!userId || !mealPlanId) {
-            return res.status(400).json({ message: 'userId and mealPlanId are required' });
+            return res.status(400).json({ message: 'userId и mealPlanId обязательны.' });
         }
 
+        // Проверка, существует ли уже план для этого пользователя
+        const [existingPlans] = await db.query(
+            'SELECT * FROM USER_MEALS_TABLE WHERE user_id = ?',
+            [userId]
+        );
+
+        if (existingPlans.length > 0) {
+            return res.status(409).json({ message: 'Пользователь уже имеет план питания.' });
+        }
+
+        // Если планов нет, добавляем новый
         await db.query(
             'INSERT INTO USER_MEALS_TABLE (user_id, meal_plan_id, added_date) VALUES (?, ?, NOW())',
             [userId, mealPlanId]
         );
 
-        res.status(200).json({ message: 'Meal plan saved successfully' });
+        res.status(200).json({ message: 'План питания успешно сохранен.' });
     } catch (error) {
-        console.error('Error saving meal plan:', error);
-        res.status(500).json({ message: 'Error saving meal plan', error: error.message });
+        console.error('Ошибка сохранения плана питания:', error);
+        res.status(500).json({ message: 'Ошибка сохранения плана питания.', error: error.message });
     }
 });
 
