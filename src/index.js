@@ -34,6 +34,8 @@ const userRoutes = require('./routes/users');
 const insertMealPlans = require('./routes/insertMealPlans');
 const guidesRoutes = require('./routes/guides');
 const insertMealPlansDays = require('./routes/insertMealPlanDays');
+const mealPlansRoutes = require('./routes/mealplans');
+
 
 // routes application
 app.use('/test', testRoutes);
@@ -42,6 +44,7 @@ app.use('/users', userRoutes);
 app.use('/mealplans', insertMealPlans);
 app.use('/guides', guidesRoutes);
 app.use('/mealplans-days', insertMealPlansDays);
+app.use('/mealplans', mealPlansRoutes);
 
 app.use((req, res, next) => {
     console.log(`Received request: ${req.method} ${req.url}`);
