@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/connection');
 
-router.post('/mealplans-days/insert-sample', async (req, res) => {
+router.post('/insert-sample', async (req, res) => {
     try {
         await db.query(`
             INSERT INTO MEALPLANS_DAYS_TABLE (meal_plan_id, day_number, total_kcal, total_protein, total_fat, total_carbs)
