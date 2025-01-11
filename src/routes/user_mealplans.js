@@ -23,4 +23,24 @@ router.post('/save-mealplan', async (req, res) => {
 });
 
 
+router.get("/:userId", async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        // Join the `USER_MEALS_TABLE` with the `MEALPLANS_TABLE` to fetch the user's meal plans
+        const [rows] = await db.query(
+            `SELECT mp.* 
+             FROM USER_MEALS_TABLE um
+             JOIN MEALPLANS_TABLE mp ON um.meal_plan_id = mp.id
+             WHERE um.user_id = ?`,
+            [userId]
+        );
+
+        res.status(200).json(rows);
+    } catch (err) {
+        console.error("Error fetching user meal plans:", err);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
 module.exports = router;
