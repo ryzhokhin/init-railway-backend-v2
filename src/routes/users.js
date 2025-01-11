@@ -18,13 +18,14 @@ router.post('/login', async (req, res) => {
 
         if (existingUser.length === 0) {
             // Create a new user if not found
-            await db.query(
+            const [result] = await db.query(
                 'INSERT INTO USERS_TABLE (telegram_ID, first_name, date_registered, date_last_login) VALUES (?, ?, NOW(), NOW())',
                 [telegram_id, first_name]
             );
 
             return res.status(201).json({
                 message: 'New user created',
+                id: result.insertId, // Возвращаем id нового пользователя
                 telegram_id,
                 first_name,
                 date_registered: new Date().toISOString(),
@@ -37,6 +38,7 @@ router.post('/login', async (req, res) => {
 
         return res.status(200).json({
             message: 'User login updated',
+            id: existingUser[0].id, // Возвращаем id существующего пользователя
             telegram_id,
             first_name: existingUser[0].first_name,
             date_registered: existingUser[0].date_registered,
