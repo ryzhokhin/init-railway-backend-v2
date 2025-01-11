@@ -54,4 +54,28 @@ router.get("/:userId", async (req, res) => {
     }
 });
 
+router.get("/days/:mealPlanId", async (req, res) => {
+    const { mealPlanId } = req.params;
+
+    try {
+        // Query to select meal plan days based on meal_plan_id
+        const [rows] = await db.query(
+            `SELECT * 
+             FROM MEALPLANS_DAYS_TABLE 
+             WHERE meal_plan_id = ?`,
+            [mealPlanId]
+        );
+
+        // Check if any rows were returned
+        if (rows.length === 0) {
+            return res.status(404).json({ message: "No meal plan days found for the given meal_plan_id" });
+        }
+
+        res.status(200).json(rows); // Return the fetched meal plan days
+    } catch (err) {
+        console.error("Error fetching meal plan days:", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
 module.exports = router;
