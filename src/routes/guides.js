@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/connection')
 
+db.
+
 router.get('/all', async (req, res) => {
    try{
        const [guides] = await db.query('SELECT * FROM GUIDES_TABLE');

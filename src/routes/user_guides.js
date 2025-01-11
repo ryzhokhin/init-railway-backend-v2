@@ -41,6 +41,25 @@ router.post('/add', async (req, res) => {
     }
 });
 
+// Delete a guide from USER_GUIDE_TABLE
+router.delete('/delete', async (req, res) => {
+    const { user_id, guide_id } = req.body;
+
+    if (!user_id || !guide_id) {
+        return res.status(400).json({ message: 'user_id and guide_id are required' });
+    }
+
+    try {
+        const query = 'DELETE FROM USER_GUIDE_TABLE WHERE user_id = ? AND guide_id = ?';
+        await db.query(query, [user_id, guide_id]);
+
+        res.status(200).json({ message: 'Guide removed from library successfully' });
+    } catch (error) {
+        console.error('Error removing guide from library:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 
 
 module.exports = router;
