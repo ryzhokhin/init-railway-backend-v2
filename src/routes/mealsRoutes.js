@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/connection'); // Подключение к вашей базе данных
 
-// Маршрут для создания таблицы MEALS_TABLE
+// Маршрут для удаления таблицы MEALS_TABLE
 router.post('/create-meals-table', async (req, res) => {
     try {
         const query = `
@@ -20,11 +20,10 @@ router.post('/create-meals-table', async (req, res) => {
                 FOREIGN KEY (meal_plan_day_id) REFERENCES MEALPLANDAYS_TABLE(id) ON DELETE CASCADE
             )
         `;
-
-        await db.query(query); // Выполнение SQL-запроса
+        await db.query(query);
         res.status(200).json({ message: 'MEALS_TABLE успешно создана.' });
     } catch (error) {
-        console.error('Ошибка при создании таблицы:', error);
+        console.error('Ошибка при создании таблицы:', error); // Логирование ошибки
         res.status(500).json({ error: 'Ошибка сервера при создании таблицы.' });
     }
 });

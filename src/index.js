@@ -52,6 +52,7 @@ app.use('/mealplans', mealPlansRoutes);
 app.use('/user_guides', user_guidesRoutes);
 app.use('/user_mealplans', user_mealplansRoutes);
 app.use('/meals', mealsRoutes);
+
 app.use((req, res, next) => {
     console.log(`Received request: ${req.method} ${req.url}`);
     console.log("Requested");
