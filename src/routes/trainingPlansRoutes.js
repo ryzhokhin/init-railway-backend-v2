@@ -35,4 +35,26 @@ router.post('/add-training', async (req, res) => {
     }
 });
 
+
+router.get('/get_user_training/:userId', async (req, res) => {
+    try {
+        // Join the USER_TRAINING_TABLE with the TRAINING_PLANS_TABLE to fetch the user's training plans
+        const [rows] = await db.query(
+            `
+      SELECT tp.*
+      FROM USER_TRAINING_TABLE ut
+      JOIN TRAINING_PLANS_TABLE tp ON ut.training_id = tp.id
+      WHERE ut.user_id = ?;
+      `,
+            [userId]
+        );
+
+        res.status(200).json(rows); // Return the retrieved rows
+    } catch (err) {
+        console.error("Error fetching user training plans:", err);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
+
 module.exports = router;
