@@ -104,5 +104,34 @@ router.get(
     }
 );
 
+router.get('/exercises', async (req, res) => {
+    const { workoutId } = req.query; // Get workoutId from the query parameters
+
+    try {
+        if (!workoutId) {
+            return res.status(400).json({ error: "Workout ID is required." });
+        }
+
+        // Query to fetch exercises from EXERCISES_TABLE for the provided workout ID
+        const [rows] = await db.query(
+            `
+            SELECT * 
+            FROM EXERCISES_TABLE
+            WHERE workout_id = ?;
+            `,
+            [workoutId]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).json({ error: "No exercises found for the provided workout ID." });
+        }
+
+        res.status(200).json(rows); // Send the retrieved exercises as JSON
+    } catch (error) {
+        console.error("Error fetching exercises:", error);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
 
 module.exports = router;
