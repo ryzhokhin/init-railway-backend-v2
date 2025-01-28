@@ -36,8 +36,12 @@ router.post('/add-training', async (req, res) => {
 });
 
 
-router.get('/get_user_training/:userId', async (req, res) => {
+router.get('/get_user_training', async (req, res) => {
     try {
+        const { userId } = req.query; // Получаем userId из query параметров
+        if (!userId) {
+            return res.status(400).json({ error: 'User ID is required' });
+        }
         // Join the USER_TRAINING_TABLE with the TRAINING_PLANS_TABLE to fetch the user's training plans
         const [rows] = await db.query(
             `
