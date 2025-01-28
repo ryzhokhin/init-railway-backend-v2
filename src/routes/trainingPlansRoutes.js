@@ -56,5 +56,49 @@ router.get('/get_user_training/:userId', async (req, res) => {
     }
 });
 
+router.get(
+    "/get_user_workouts/:trainingPlanId/:userId",
+    async (req, res) => {
+        const { trainingPlanId, userId } = req.params;
+
+        try {
+            // Step 1: Check if the user has access to the training plan
+            const [userTrainingRow] = await db.query(
+                `
+        SELECT *
+        FROM USER_TRAINING_TABLE
+        WHERE user_id = ? AND training_id = ?
+        `,
+                [userId, trainingPlanId]
+            );
+
+            if (!userTrainingRow || userTrainingRow.length === 0) {
+                return res.status(404).json({ error: "Training plan not found for this user" });
+            }
+
+            // Step 2: Fetch workouts for the training plan
+            const [workouts] = await db.query(
+                `
+        SELECT *
+        FROM WORKOUTS_TABLE
+        WHERE training_plan_id = ?
+        ORDER BY order_num
+        `,
+                [trainingPlanId]
+            );
+
+            if (!workouts || workouts.length === 0) {
+                return res.status(404).json({ error: "No workouts found for this training plan" });
+            }
+
+            // Step 3: Return the workouts
+            res.status(200).json(workouts);
+        } catch (error) {
+            console.error("Error fetching workouts:", error);
+            res.status(500).json({ error: "Server error" });
+        }
+    }
+);
+
 
 module.exports = router;
