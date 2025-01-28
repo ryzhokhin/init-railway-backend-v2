@@ -133,5 +133,35 @@ router.get('/exercises', async (req, res) => {
     }
 });
 
+router.get("/reps", async (req, res) => {
+    const { exerciseId } = req.query;
+
+    if (!exerciseId) {
+        return res.status(400).json({ error: "exerciseId is required" });
+    }
+
+    try {
+        // Query to fetch all reps for the given exercise_id
+        const [rows] = await db.query(
+            `
+            SELECT *
+            FROM EXERCISE_REP_TABLE
+            WHERE exercise_id = ?
+            `,
+            [exerciseId]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).json({ error: "No repetitions found for the provided exerciseId" });
+        }
+
+        // Return the repetitions as JSON
+        res.status(200).json(rows);
+    } catch (err) {
+        console.error("Error fetching repetitions:", err);
+        res.status(500).json({ error: "Server error" });
+    }
+});
+
 
 module.exports = router;
