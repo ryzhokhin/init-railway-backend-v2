@@ -14,6 +14,8 @@ app.use(cors({
     allowedHeaders: ['Content-Type']
 }));
 
+
+
 // testing without headers
 //
 // // Проверка подключения к базе данных
