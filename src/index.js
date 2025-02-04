@@ -3,9 +3,21 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config(); // Не обязателен, если Railway подставит переменные
 
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
+
+
 const app = express();
+
+const pool = require('./db/connection');
+app.use(express.json());
+app.use(cookieParser());
+const sessionStore = new MySQLStore({}, pool);
+
 // app.use(cors());
 app.use(bodyParser.json());
+
 
 app.use(cors({
     origin: 'https://zhiroazhigatel.netlify.app', // Укажите URL вашего фронтенда
@@ -16,17 +28,24 @@ app.use(cors({
 
 
 
-// testing without headers
-//
-// // Проверка подключения к базе данных
-// app.use((req, res, next) => {
-//     console.log("Request Headers:", req.headers);
-//     res.setHeader('Access-Control-Allow-Origin', 'https://zhiroazhigatel.netlify.app'); // Ваш фронтенд-домен
-//     res.setHeader('Access-Control-Allow-Credentials', 'true'); // Обязательно для cookies/credentials
-//     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE'); // Поддерживаемые методы
-//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type'); // Обязательно, если передаются данные
-//     next();
-// });
+// Set up express-session middleware.
+app.use(session({
+    key: 'session_cookie_name', // Name of the cookie to be set
+    secret: process.env.SESSION_SECRET || 'your_secret_key_here', // Change this for production!
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24, // Session expires after 24 hours
+        // secure: true, // Enable when using HTTPS in production
+        httpOnly: true
+    }
+}));
+
+
+// Import and mount the auth routes.
+const authRoutes = require('./management/auth');
+app.use('/auth', authRoutes);
 
 
 // routes connections
