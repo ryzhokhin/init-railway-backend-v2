@@ -79,6 +79,8 @@ app.use('/user_mealplans', user_mealplansRoutes);
 app.use('/meals', mealsRoutes);
 app.use('/trainings', trainingPlansRoutes);
 
+//
+
 app.use((req, res, next) => {
 
     console.log('Session:', req.session);
