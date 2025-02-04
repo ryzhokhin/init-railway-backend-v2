@@ -112,6 +112,7 @@ router.post('/login', (req, res) => {
     res.cookie("hello", "world", {maxAge: 60000})
     console.log("❔🍪",req.cookies);
     console.log("👅🍪",res.cookies);
+    console.log(req.headers.cookie);
 
 
     if (!initData) {
