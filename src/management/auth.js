@@ -96,7 +96,7 @@ function validateAndUnpackInitData(initDataStr) {
     // Return the parsed data (with the "user" field parsed as an object)
     console.log(parsedData);
     console.log("🟨🟨🟨️ Line breaker 🟨🟨🟨️");
-    return valid;
+    return parsedData;
 }
 
 /**
@@ -125,8 +125,9 @@ router.post('/login', (req, res) => {
 
     // Extract Telegram user data (expects initData.user exists and contains an "id").
     const telegramUser = unpackedData.user;
-    console.log("🟨🟨🟨️ Line breaker 🟨🟨🟨️");
+
     console.log("Telegram user in unpacked data:", telegramUser);
+    console.log("🟨🟨🟨️ Line breaker 🟨🟨🟨️");
     if (!telegramUser || !telegramUser.id) {
         return res.status(400).json({ error: 'User data is missing in initData' });
     }
