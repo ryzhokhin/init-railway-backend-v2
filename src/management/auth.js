@@ -6,7 +6,7 @@ const crypto = require('crypto');
 const router = express.Router();
 
 // Your Telegram Bot Token – set this in your environment variables or replace with your actual token.
-const BOT_TOKEN = process.env.BOT_TOKEN || 'YOUR_BOT_TOKEN';
+const BOT_TOKEN = process.env.BOT_TOKEN;
 
 /**
  * Unpacks and validates the Telegram initData.
