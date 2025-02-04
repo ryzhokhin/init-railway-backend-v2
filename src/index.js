@@ -38,7 +38,10 @@ app.use(session({
     cookie: {
         maxAge: 1000 * 60 * 60 * 24, // Session expires after 24 hours
         // secure: true, // Enable when using HTTPS in production
-        httpOnly: true
+        httpOnly: true,
+        sameSite: true,
+
+
     }
 }));
 
@@ -77,8 +80,9 @@ app.use('/meals', mealsRoutes);
 app.use('/trainings', trainingPlansRoutes);
 
 app.use((req, res, next) => {
-    console.log(`Received request: ${req.method} ${req.url}`);
-    console.log("Requested");
+
+    console.log('Session:', req.session);
+    console.log('Cookies:', req.cookies);
     next();
 });
 
