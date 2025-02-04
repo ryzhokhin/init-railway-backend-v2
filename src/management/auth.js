@@ -44,6 +44,7 @@ function validateAndUnpackInitData(initDataStr) {
 
     // Ensure the "hash" parameter exists.
     const receivedHash = initData.hash;
+    console.log(`Received ${receivedHash}`);
     if (!receivedHash) {
         throw new Error('Missing hash in initData');
     }
@@ -87,6 +88,7 @@ function validateAndUnpackInitData(initDataStr) {
  */
 router.post('/login', (req, res) => {
     const { initData } = req.body;
+    console.log(initData);
     if (!initData) {
         return res.status(400).json({ error: 'initData is required in the request body' });
     }
