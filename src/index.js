@@ -12,9 +12,7 @@ const pool = require('./db/connection');
 
 // Middleware for logging (only in development mode)
 app.use((req, res, next) => {
-    if (process.env.NODE_ENV !== 'production') {
-        console.log('Cookies:', req.cookies);
-    }
+    console.log(req.cookies);
     console.log('rocket🚀🚀🚀');
     next();
 });
@@ -40,7 +38,7 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
         maxAge: 1000 * 60 * 60 * 24, // Session expires after 24 hours
-        secure: process.env.NODE_ENV === 'production', // Enable only in production (HTTPS)
+        // secure: process.env.NODE_ENV === 'production', // Enable only in production (HTTPS)
         httpOnly: true,
         sameSite: 'none', // Required for cross-origin cookies
     }
