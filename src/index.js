@@ -41,7 +41,7 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24, // Session expires after 24 hours
         // secure: process.env.NODE_ENV === 'production', // Enable only in production (HTTPS)
         httpOnly: true,
-        sameSite: 'none', // Required for cross-origin cookies
+        sameSite: 'None', // Required for cross-origin cookies
     }
 }));
 
