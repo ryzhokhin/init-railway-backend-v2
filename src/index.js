@@ -1,57 +1,56 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-require('dotenv').config(); // Не обязателен, если Railway подставит переменные
+require('dotenv').config(); // Load environment variables
 
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 
-
 const app = express();
-
 const pool = require('./db/connection');
+
+// Middleware for logging (only in development mode)
+app.use((req, res, next) => {
+    if (process.env.NODE_ENV !== 'production') {
+        console.log('Cookies:', req.cookies);
+    }
+    console.log('rocket🚀🚀🚀');
+    next();
+});
+
+// Middleware setup
 app.use(express.json());
 app.use(cookieParser());
 const sessionStore = new MySQLStore({}, pool);
 
-// app.use(cors());
-app.use(bodyParser.json());
-
-
 app.use(cors({
-    origin: 'https://zhiroazhigatel.netlify.app', // Укажите URL вашего фронтенда
+    origin: 'https://zhiroazhigatel.netlify.app', // Frontend URL
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true, // Разрешите отправку cookies/credentials
+    credentials: true, // Allow cookies to be sent and received
     allowedHeaders: ['Content-Type']
 }));
 
-
-
-// Set up express-session middleware.
+// Set up express-session middleware
 app.use(session({
-    key: 'session_cookie_name', // Name of the cookie to be set
-    secret: process.env.SESSION_SECRET || 'your_secret_key_here', // Change this for production!
+    key: 'session_cookie_name',
+    secret: process.env.SESSION_SECRET || 'your_secret_key_here', // Use a strong secret in production
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
     cookie: {
         maxAge: 1000 * 60 * 60 * 24, // Session expires after 24 hours
-        // secure: true, // Enable when using HTTPS in production
+        secure: process.env.NODE_ENV === 'production', // Enable only in production (HTTPS)
         httpOnly: true,
-        sameSite: 'none',
-
-
+        sameSite: 'none', // Required for cross-origin cookies
     }
 }));
 
-
-// Import and mount the auth routes.
+// Import and mount the auth routes
 const authRoutes = require('./management/auth');
 app.use('/auth', authRoutes);
 
-
-// routes connections
+// Routes connections
 const testRoutes = require('./routes/test');
 const setupRoutes = require('./routes/setup');
 const userRoutes = require('./routes/users');
@@ -64,9 +63,7 @@ const user_mealplansRoutes = require('./routes/user_mealplans');
 const mealsRoutes = require('./routes/mealsRoutes');
 const trainingPlansRoutes = require('./routes/trainingPlansRoutes');
 
-
-
-// routes application
+// Route mounting
 app.use('/test', testRoutes);
 app.use('/setup', setupRoutes);
 app.use('/users', userRoutes);
@@ -79,20 +76,19 @@ app.use('/user_mealplans', user_mealplansRoutes);
 app.use('/meals', mealsRoutes);
 app.use('/trainings', trainingPlansRoutes);
 
-//
-
-app.use((req, res, next) => {
-
-    // console.log('Session:', req.session);
-    console.log('Cookies:', req.cookies);
-    console.log('rocket🚀🚀🚀')
-    console.log('Cookies:', req.cookies);
-    next();
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'OK' });
 });
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error('Error:', err.stack);
+    res.status(500).json({ error: 'Internal Server Error' });
+});
 
+// Start server
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, '::', () => {
     console.log(`Server listening on [::]${PORT}`);
 });
