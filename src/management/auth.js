@@ -10,28 +10,23 @@ const BOT_TOKEN = process.env.BOT_TOKEN;
 console.log('BOT_TOKEN', BOT_TOKEN);
 
 /**
- * Unpacks and validates the Telegram initData.
+ * Validates and unpacks Telegram initData based on the Telegram WebApp guidelines.
  *
- * Telegram sends the initData as a query string. The steps are:
- *  1. Parse the query string into an object.
- *  2. Extract and remove the "hash" parameter.
- *  3. Build the data-check string by sorting the remaining keys alphabetically
- *     and joining them in the format "key=value" separated by "\n".
- *  4. Compute the secret key as:
- *         secret_key = HMAC_SHA256(botToken, "WebAppData")
- *  5. Compute the HMAC-SHA256 of the data-check string using the secret key.
- *  6. Compare the computed hash with the received hash using timingSafeEqual.
+ * Telegram documentation:
+ *   data_check_string = sorted(key1=value1\nkey2=value2\n...)
+ *   secret_key = HMAC_SHA256("WebAppData", bot_token)
+ *   hash = HMAC_SHA256(data_check_string, secret_key) in hexadecimal
  *
- * @param {string} initDataStr - The initData as a query string.
+ * @param {string} initDataStr - The initData string received from the Telegram WebApp (a query string).
  * @returns {Object} - The parsed initData object if valid.
- * @throws {Error} - If the initData is invalid.
+ * @throws {Error} - Throws an error if the hash is missing or invalid.
  */
 function validateAndUnpackInitData(initDataStr) {
     // Parse the query string into an object.
     const params = new URLSearchParams(initDataStr);
     const initData = {};
     for (const [key, value] of params.entries()) {
-        // For keys like "user" that may be JSON, attempt to parse.
+        // If the key is 'user', it might be a JSON-encoded object.
         if (key === 'user') {
             try {
                 initData[key] = JSON.parse(value);
@@ -43,33 +38,39 @@ function validateAndUnpackInitData(initDataStr) {
         }
     }
 
-    // Ensure the "hash" parameter exists.
+    // Make sure the 'hash' parameter exists.
     const receivedHash = initData.hash;
-    console.log(`Received ${receivedHash}`);
     if (!receivedHash) {
         throw new Error('Missing hash in initData');
     }
-    // Remove the hash from the object for calculation.
+
+    // Remove the hash field from the data to form the data-check object.
     const dataCheckObj = { ...initData };
     delete dataCheckObj.hash;
 
-    // Create the data-check string by sorting keys alphabetically.
+    // Create the data-check string:
+    // 1. Sort keys alphabetically.
+    // 2. Join as "key=value" pairs with newline ('\n') as a separator.
     const sortedKeys = Object.keys(dataCheckObj).sort();
     const dataCheckString = sortedKeys
         .map(key => `${key}=${dataCheckObj[key]}`)
         .join('\n');
 
-    // Compute the secret key using HMAC-SHA256 with "WebAppData" as the key.
-    const secretKey = crypto.createHmac('sha256', "WebAppData")
+    // Compute the secret key.
+    // According to Telegram, the secret key is:
+    //   secret_key = HMAC_SHA256("WebAppData", bot_token)
+    const secretKey = crypto
+        .createHmac('sha256', "WebAppData")
         .update(BOT_TOKEN)
         .digest();
 
-    // Compute the HMAC-SHA256 hash of the data-check string using the secret key.
-    const computedHash = crypto.createHmac('sha256', secretKey)
+    // Compute the hash over the data-check string using the secret key.
+    const computedHash = crypto
+        .createHmac('sha256', secretKey)
         .update(dataCheckString)
         .digest('hex');
 
-    // Validate the computed hash against the received hash.
+    // Compare the computed hash with the received hash using a timing-safe comparison.
     const valid = crypto.timingSafeEqual(
         Buffer.from(computedHash, 'hex'),
         Buffer.from(receivedHash, 'hex')
@@ -78,6 +79,8 @@ function validateAndUnpackInitData(initDataStr) {
     if (!valid) {
         throw new Error('Invalid initData hash');
     }
+
+    // Return the parsed initData (including the 'user' field and other data).
     return initData;
 }
 
