@@ -12,8 +12,9 @@ const pool = require('./db/connection');
 
 // Middleware for logging (only in development mode)
 app.use((req, res, next) => {
+    console.log('🚀launched');
     console.log(req.cookies);
-    console.log('rocket🚀🚀🚀');
+    console.log('🛬landed');
     next();
 });
 
