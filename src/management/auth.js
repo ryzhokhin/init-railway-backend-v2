@@ -98,6 +98,7 @@ router.post('/login', (req, res) => {
         // Validate and unpack the initData.
         unpackedData = validateAndUnpackInitData(initData);
     } catch (err) {
+        console.log("ERROR WITH VALIDATION METHOD")
         return res.status(400).json({ error: err.message });
     }
 
