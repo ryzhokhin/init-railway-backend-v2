@@ -9,56 +9,65 @@ const router = express.Router();
 const BOT_TOKEN = process.env.BOT_TOKEN;
 console.log('BOT_TOKEN', BOT_TOKEN);
 
+
 /**
- * Validates and unpacks Telegram initData based on the Telegram WebApp guidelines.
+ * Validates and unpacks Telegram initData based on Telegram's guidelines.
  *
- * Telegram documentation:
- *   data_check_string = sorted(key1=value1\nkey2=value2\n...)
- *   secret_key = HMAC_SHA256("WebAppData", bot_token)
- *   hash = HMAC_SHA256(data_check_string, secret_key) in hexadecimal
+ * The steps are:
+ *   1. Parse the query string into raw key/value pairs.
+ *   2. Remove the 'hash' field from the raw data.
+ *   3. Sort the remaining keys alphabetically and join them as "key=value" pairs using '\n'.
+ *   4. Compute the secret key as HMAC-SHA256("WebAppData", BOT_TOKEN).
+ *   5. Compute the HMAC-SHA256 of the data-check string using the secret key.
+ *   6. Compare the computed hash with the received hash.
  *
- * @param {string} initDataStr - The initData string received from the Telegram WebApp (a query string).
- * @returns {Object} - The parsed initData object if valid.
- * @throws {Error} - Throws an error if the hash is missing or invalid.
+ * @param {string} initDataStr - The initData string received from Telegram.
+ * @returns {Object} - The parsed initData object with the user field parsed as JSON.
+ * @throws {Error} - If the hash is missing or invalid.
  */
 function validateAndUnpackInitData(initDataStr) {
-    // Parse the query string into an object.
+    // Parse the query string into an object and keep a copy of the raw values.
     const params = new URLSearchParams(initDataStr);
-    const initData = {};
+    const rawData = {};
+    const parsedData = {}; // This will hold the parsed values (e.g. user as an object).
+
     for (const [key, value] of params.entries()) {
-        // If the key is 'user', it might be a JSON-encoded object.
+        rawData[key] = value;
+        // For convenience, parse "user" for later use—but note we use the raw value for hashing.
         if (key === 'user') {
             try {
-                initData[key] = JSON.parse(value);
+                parsedData[key] = JSON.parse(value);
             } catch (err) {
-                initData[key] = value;
+                parsedData[key] = value;
             }
         } else {
-            initData[key] = value;
+            parsedData[key] = value;
         }
     }
 
-    // Make sure the 'hash' parameter exists.
-    const receivedHash = initData.hash;
+    // Ensure the 'hash' parameter exists.
+    const receivedHash = rawData.hash;
     if (!receivedHash) {
         throw new Error('Missing hash in initData');
     }
 
-    // Remove the hash field from the data to form the data-check object.
-    const dataCheckObj = { ...initData };
+    // Build the data-check object using the raw values.
+    const dataCheckObj = { ...rawData };
     delete dataCheckObj.hash;
 
     // Create the data-check string:
-    // 1. Sort keys alphabetically.
-    // 2. Join as "key=value" pairs with newline ('\n') as a separator.
+    //   1. Sort the keys alphabetically.
+    //   2. Join them as "key=value" pairs with a newline as the separator.
     const sortedKeys = Object.keys(dataCheckObj).sort();
     const dataCheckString = sortedKeys
         .map(key => `${key}=${dataCheckObj[key]}`)
         .join('\n');
 
-    // Compute the secret key.
-    // According to Telegram, the secret key is:
-    //   secret_key = HMAC_SHA256("WebAppData", bot_token)
+    // For debugging: log the data-check string.
+    console.log('Data Check String:\n', dataCheckString);
+
+    // Compute the secret key:
+    // secret_key = HMAC_SHA256("WebAppData", BOT_TOKEN)
     const secretKey = crypto
         .createHmac('sha256', "WebAppData")
         .update(BOT_TOKEN)
@@ -70,7 +79,10 @@ function validateAndUnpackInitData(initDataStr) {
         .update(dataCheckString)
         .digest('hex');
 
-    // Compare the computed hash with the received hash using a timing-safe comparison.
+    console.log('Computed Hash:', computedHash);
+    console.log('Received Hash:', receivedHash);
+
+    // Validate the computed hash against the received hash.
     const valid = crypto.timingSafeEqual(
         Buffer.from(computedHash, 'hex'),
         Buffer.from(receivedHash, 'hex')
@@ -80,8 +92,9 @@ function validateAndUnpackInitData(initDataStr) {
         throw new Error('Invalid initData hash');
     }
 
-    // Return the parsed initData (including the 'user' field and other data).
-    return initData;
+    // Return the parsed data (with the "user" field parsed as an object)
+    console.log(parsedData);
+    return valid;
 }
 
 /**
