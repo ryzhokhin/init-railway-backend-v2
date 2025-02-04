@@ -109,6 +109,9 @@ router.post('/login', (req, res) => {
     const { initData } = req.body;
     // console.log(initData);
     // console.log("🟨🟨🟨️ Line breaker 🟨🟨🟨️");
+    console.log("❔🍪",req.cookies);
+    console.log("👅🍪",res.cookies);
+
 
     if (!initData) {
         return res.status(400).json({ error: 'initData is required in the request body' });
