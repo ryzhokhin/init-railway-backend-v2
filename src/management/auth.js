@@ -79,8 +79,8 @@ function validateAndUnpackInitData(initDataStr) {
         .update(dataCheckString)
         .digest('hex');
 
-    console.log('Computed Hash:', computedHash);
-    console.log('Received Hash:', receivedHash);
+    // console.log('Computed Hash:', computedHash);
+    // console.log('Received Hash:', receivedHash);
 
     // Validate the computed hash against the received hash.
     const valid = crypto.timingSafeEqual(
@@ -94,8 +94,8 @@ function validateAndUnpackInitData(initDataStr) {
     }
 
     // Return the parsed data (with the "user" field parsed as an object)
-    console.log(parsedData);
-    console.log("🟨🟨🟨️ Line breaker 🟨🟨🟨️");
+    // console.log(parsedData);
+    // console.log("🟨🟨🟨️ Line breaker 🟨🟨🟨️");
     return parsedData;
 }
 
@@ -107,8 +107,8 @@ function validateAndUnpackInitData(initDataStr) {
  */
 router.post('/login', (req, res) => {
     const { initData } = req.body;
-    console.log(initData);
-    console.log("🟨🟨🟨️ Line breaker 🟨🟨🟨️");
+    // console.log(initData);
+    // console.log("🟨🟨🟨️ Line breaker 🟨🟨🟨️");
 
     if (!initData) {
         return res.status(400).json({ error: 'initData is required in the request body' });
@@ -126,8 +126,8 @@ router.post('/login', (req, res) => {
     // Extract Telegram user data (expects initData.user exists and contains an "id").
     const telegramUser = unpackedData.user;
 
-    console.log("Telegram user in unpacked data:", telegramUser);
-    console.log("🟨🟨🟨️ Line breaker 🟨🟨🟨️");
+    // console.log("Telegram user in unpacked data:", telegramUser);
+    // console.log("🟨🟨🟨️ Line breaker 🟨🟨🟨️");
     if (!telegramUser || !telegramUser.id) {
         return res.status(400).json({ error: 'User data is missing in initData' });
     }
