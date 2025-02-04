@@ -39,7 +39,7 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24, // Session expires after 24 hours
         // secure: true, // Enable when using HTTPS in production
         httpOnly: true,
-        sameSite: true,
+        sameSite: 'none',
 
 
     }
@@ -83,7 +83,9 @@ app.use('/trainings', trainingPlansRoutes);
 
 app.use((req, res, next) => {
 
-    console.log('Session:', req.session);
+    // console.log('Session:', req.session);
+    console.log('Cookies:', req.cookies);
+    console.log('rocket🚀🚀🚀')
     console.log('Cookies:', req.cookies);
     next();
 });
