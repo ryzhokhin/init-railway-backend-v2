@@ -109,7 +109,7 @@ router.post('/login', (req, res) => {
     const { initData } = req.body;
     // console.log(initData);
     // console.log("🟨🟨🟨️ Line breaker 🟨🟨🟨️");
-    res.cookie("hello", "world", {maxAge: 60000})
+    // res.cookie("hello", "world", {maxAge: 60000})
     console.log("❔🍪",req.cookies);
     console.log("👅🍪",res.cookies);
     console.log(req.headers.cookie);
