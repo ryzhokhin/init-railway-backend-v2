@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Your Telegram Bot Token – set this in your environment variables or replace with your actual token.
 const BOT_TOKEN = process.env.BOT_TOKEN;
-console.log('BOT_TOKEN', BOT_TOKEN);
+// console.log('BOT_TOKEN', BOT_TOKEN);
 
 
 /**
@@ -64,7 +64,7 @@ function validateAndUnpackInitData(initDataStr) {
         .join('\n');
 
     // For debugging: log the data-check string.
-    console.log('Data Check String:\n', dataCheckString);
+    // console.log('Data Check String:\n', dataCheckString);
 
     // Compute the secret key:
     // secret_key = HMAC_SHA256("WebAppData", BOT_TOKEN)
