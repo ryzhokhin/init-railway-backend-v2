@@ -89,6 +89,7 @@ function validateAndUnpackInitData(initDataStr) {
     );
 
     if (!valid) {
+        console.log('***** ERROR IN THE VALIDATION *****')
         throw new Error('Invalid initData hash');
     }
 
