@@ -27,8 +27,8 @@ app.use(cors({
 }));
 
 // Import and mount the auth routes
-const authRoutes = require('./management/auth');
-app.use('/auth', authRoutes);
+
+
 
 
 // Routes connections
@@ -43,6 +43,7 @@ const user_guidesRoutes = require('./routes/user_guides');
 const user_mealplansRoutes = require('./routes/user_mealplans');
 const mealsRoutes = require('./routes/mealsRoutes');
 const trainingPlansRoutes = require('./routes/trainingPlansRoutes');
+const authRoutes = require('./management/auth');
 
 // Route mounting
 app.use('/test', testRoutes);
@@ -56,7 +57,7 @@ app.use('/user_guides', user_guidesRoutes);
 app.use('/user_mealplans', user_mealplansRoutes);
 app.use('/meals', mealsRoutes);
 app.use('/trainings', trainingPlansRoutes);
-
+app.use('/auth', authRoutes);
 // Health check endpoint
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'OK' });
