@@ -23,7 +23,7 @@ app.use(cors({
     origin: 'https://zhiroazhigatel.netlify.app', // Frontend URL
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, // Allow cookies to be sent and received
-    allowedHeaders: ['Content-Type']
+    allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 // Import and mount the auth routes
