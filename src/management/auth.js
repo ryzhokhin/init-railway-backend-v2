@@ -15,7 +15,7 @@ const db = require('../db/connection');
 async function getDatabaseUserId(telegramId) {
     try {
         const [rows] = await db.execute(
-            'SELECT id, first_name, last_name, username FROM USERS_TABLE WHERE telegram_ID = ? LIMIT 1',
+            'SELECT * FROM USERS_TABLE WHERE telegram_ID = ? LIMIT 1',
             [telegramId]
         );
         return rows.length > 0 ? rows[0] : null;
