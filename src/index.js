@@ -3,14 +3,9 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config(); // Load environment variables
 
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
-const MySQLStore = require('express-mysql-session')(session);
 
 const app = express();
 const pool = require('./db/connection');
-app.use(cookieParser());
-
 
 
 // Middleware for logging (only in development mode)
@@ -23,7 +18,6 @@ app.use((req, res, next) => {
 
 // Middleware setup
 app.use(express.json());
-const sessionStore = new MySQLStore({}, pool);
 
 app.use(cors({
     origin: 'https://zhiroazhigatel.netlify.app', // Frontend URL
@@ -32,25 +26,10 @@ app.use(cors({
     allowedHeaders: ['Content-Type']
 }));
 
-// Set up express-session middleware
-app.use(session({
-    key: 'session_cookie_name',
-    secret: process.env.SESSION_SECRET, // Use a strong secret in production
-    store: sessionStore,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        maxAge: 1000 * 60 * 60 * 24, // Session expires after 24 hours
-        // secure: process.env.NODE_ENV === 'production', // Enable only in production (HTTPS)
-        httpOnly: true,
-        sameSite: 'None', // Required for cross-origin cookies
-        secure: true,
-    }
-}));
-
 // Import and mount the auth routes
 const authRoutes = require('./management/auth');
 app.use('/auth', authRoutes);
+
 
 // Routes connections
 const testRoutes = require('./routes/test');
@@ -83,11 +62,6 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'OK' });
 });
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-    console.error('Error:', err.stack);
-    res.status(500).json({ error: 'Internal Server Error' });
-});
 
 // Start server
 const PORT = process.env.PORT || 3000;
