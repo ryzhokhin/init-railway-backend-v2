@@ -13,20 +13,18 @@ const JWT_SECRET = process.env.JWT_SECRET || "your_super_secret_key";
 const db = require('../db/connection');
 
 async function getDatabaseUserId(telegramId) {
-    const connection = await mysql.createConnection(db);
     try {
-        const [rows] = await connection.execute(
-            'SELECT id FROM USERS_TABLE WHERE telegram_ID = ? LIMIT 1',
+        const [rows] = await db.execute(
+            'SELECT id, first_name, last_name, username FROM USERS_TABLE WHERE telegram_ID = ? LIMIT 1',
             [telegramId]
         );
-        return rows.length > 0 ? rows[0].id : null;
+        return rows.length > 0 ? rows[0] : null;
     } catch (error) {
         console.error('Database query error:', error);
         return null;
-    } finally {
-        await connection.end();
     }
 }
+
 
 function validateAndUnpackInitData(initDataStr) {
     const params = new URLSearchParams(initDataStr);
