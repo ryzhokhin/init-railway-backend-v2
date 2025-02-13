@@ -6,6 +6,7 @@ require('dotenv').config(); // Load environment variables
 
 const app = express();
 const pool = require('./db/connection');
+const authenticateJWT = require('./management/authMiddleware');
 
 
 // Middleware for logging (only in development mode)
@@ -63,6 +64,10 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'OK' });
 });
 
+// ✅ Protected Route Example: Requires JWT Token
+app.get('/protected-route', authenticateJWT, (req, res) => {
+    res.json({ message: 'This is a protected route', user: req.user });
+});
 
 // Start server
 const PORT = process.env.PORT || 3000;
