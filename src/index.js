@@ -66,7 +66,7 @@ app.get('/health', (req, res) => {
 
 // ✅ Protected Route Example: Requires JWT Token
 app.get('/protected-route', authenticateJWT, (req, res) => {
-    res.json({ message: 'This is a protected route', user: req.user });
+    res.json({ message: 'This is a protected route', user: req.token });
 });
 
 // Start server
