@@ -33,12 +33,12 @@ app.use(cors({
 
 
 // Routes connections
-const testRoutes = require('./routes/test');
-const setupRoutes = require('./routes/setup');
+const testRoutes = require('./unusedRoutes/test');
+const setupRoutes = require('./unusedRoutes/setup');
 const userRoutes = require('./routes/users');
-const insertMealPlans = require('./routes/insertMealPlans');
+const insertMealPlans = require('./unusedRoutes/insertMealPlans');
 const guidesRoutes = require('./routes/guides');
-const insertMealPlansDays = require('./routes/insertMealPlanDays');
+const insertMealPlansDays = require('./unusedRoutes/insertMealPlanDays');
 const mealPlansRoutes = require('./routes/mealplans');
 const user_guidesRoutes = require('./routes/user_guides');
 const user_mealplansRoutes = require('./routes/user_mealplans');
