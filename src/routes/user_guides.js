@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db/connection');
+const authenticator = require("../management/authMiddleware");
 
-router.get("/:userId", async (req, res) => {
-    const { userId } = req.params;
+router.get("/load", authenticator.authenticateJWT, async (req, res) => {
+
+    const userId = authenticator.getUserIdFromToken(req);
 
     try {
         // Join the `USER_GUIDE_TABLE` with the `GUIDES_TABLE` to fetch the user's guides
@@ -23,8 +25,10 @@ router.get("/:userId", async (req, res) => {
 });
 
 // Добавление записи в USER_GUIDE_TABLE
-router.post('/add', async (req, res) => {
-    const { user_id, guide_id } = req.body;
+router.post('/add', authenticator.authenticateJWT ,async (req, res) => {
+    // const { user_id, guide_id } = req.body;
+    const user_id = authenticator.getUserIdFromToken(req);
+    const guide_id = req.guide_id;
 
     if (!user_id || !guide_id) {
         return res.status(400).json({ message: 'user_id and guide_id are required' });
@@ -42,8 +46,9 @@ router.post('/add', async (req, res) => {
 });
 
 // Delete a guide from USER_GUIDE_TABLE
-router.delete('/delete', async (req, res) => {
-    const { user_id, guide_id } = req.body;
+router.delete('/delete', authenticator.authenticateJWT ,async (req, res) => {
+    const user_id = authenticator.getUserIdFromToken(req);
+    const guide_id = req.guide_id;
 
     if (!user_id || !guide_id) {
         return res.status(400).json({ message: 'user_id and guide_id are required' });

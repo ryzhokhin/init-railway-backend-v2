@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db/connection')
+const authenticateJWT = require("../management/authMiddleware");
 
 //something fixed in this file
-router.get('/all', async (req, res) => {
+router.get('/all', authenticateJWT, async (req, res) => {
    try{
        const [guides] = await db.query('SELECT * FROM GUIDES_TABLE');
        if(guides.length === 0){
