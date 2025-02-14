@@ -74,7 +74,7 @@ router.post('/login', async (req, res) => {
         return res.status(404).json({ error: 'User not found in database' });
     }
 
-    const token = jwt.sign({ userId: databaseUserId }, JWT_SECRET, { expiresIn: '2h' });
+    const token = jwt.sign({ userId: databaseUserId }, JWT_SECRET, { expiresIn: '2minutes' });
     return res.json({
         message: 'Login successful',
         token,
