@@ -7,6 +7,14 @@ router.get("/load", authenticator.authenticateJWT, async (req, res) => {
 
     const userId = authenticator.getUserIdFromToken(req);
 
+    console.log("🔹 Extracted User ID:", userId); // Debugging Log
+
+    if (!userId) {
+        console.error("❌ Error: User ID is undefined!");
+        return res.status(401).json({ error: "Unauthorized: Invalid user token" });
+    }
+
+
     try {
         // Join the `USER_GUIDE_TABLE` with the `GUIDES_TABLE` to fetch the user's guides
         const [rows] = await db.query(
