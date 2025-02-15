@@ -23,7 +23,7 @@ const authenticateJWT = (req, res, next) => {
 };
 
 const getUserIdFromToken = (req) => {
-    return req.user.userId; // Extract userId from the decoded JWT
+    return req.user.userId.id; // Extract userId from the decoded JWT
 };
 
 module.exports = {authenticateJWT, getUserIdFromToken};
