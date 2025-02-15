@@ -17,6 +17,7 @@ const authenticateJWT = (req, res, next) => {
             return res.status(403).json({ error: "Invalid or expired token" });
         }
         req.user = user; // Store user data in request object
+        console.log("✅User stored in the authenticateJWT ✅", user);
         next();
     });
 };
