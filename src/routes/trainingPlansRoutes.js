@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db/connection');
+const authenticator = require('../management/authMiddleware');
 
 // Эндпоинт для получения всех тренировочных планов
 router.get('/training-plans', async (req, res) => {
@@ -13,9 +14,10 @@ router.get('/training-plans', async (req, res) => {
     }
 });
 
-router.post('/add-training', async (req, res) => {
+router.post('/add-training', authenticator.authenticateJWT, async (req, res) => {
     try {
-        const { user_id, training_id } = req.body;
+        const user_id = authenticator.getUserIdFromToken(req);
+        const training_id = req.body.trainingId;
 
         // Проверка, что данные переданы
         if (!user_id || !training_id) {
@@ -36,9 +38,10 @@ router.post('/add-training', async (req, res) => {
 });
 
 
-router.get('/get_user_training', async (req, res) => {
+router.get('/get_user_training', authenticator.authenticateJWT, async (req, res) => {
     try {
-        const { userId } = req.query; // Получаем userId из query параметров
+        const userId = authenticator.getUserIdFromToken(req);
+        // const { userId } = req.query; // Получаем userId из query параметров
         if (!userId) {
             return res.status(400).json({ error: 'User ID is required' });
         }
@@ -61,9 +64,11 @@ router.get('/get_user_training', async (req, res) => {
 });
 
 router.get(
-    "/get_user_workouts/:trainingPlanId/:userId",
+    "/get_user_workouts/:trainingPlanId/load", authenticator.authenticateJWT,
+    // "/get_user_workouts/:trainingPlanId/:userId", authenticator.authenticateJWT, old thing
     async (req, res) => {
-        const { trainingPlanId, userId } = req.params;
+        const userId = authenticator.getUserIdFromToken(req);
+        const trainingPlanId= req.body.trainingPlanId;
 
         try {
             // Step 1: Check if the user has access to the training plan
