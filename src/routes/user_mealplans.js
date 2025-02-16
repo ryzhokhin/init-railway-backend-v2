@@ -1,10 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db/connection');
+const authenticator = require("../management/authMiddleware");
 
-router.post('/save-mealplan', async (req, res) => {
+router.post('/save-mealplan', authenticator.authenticateJWT, async (req, res) => {
     try {
-        const { userId, mealPlanId } = req.body;
+        // const { userId, mealPlanId } = req.body;
+        const userId = authenticator.getUserIdFromToken(req);
+        const mealPlanId = req.body.mealPlanId;
 
         if (!userId || !mealPlanId) {
             return res.status(400).json({ message: 'userId и mealPlanId обязательны.' });
@@ -34,8 +37,9 @@ router.post('/save-mealplan', async (req, res) => {
 });
 
 
-router.get("/:userId", async (req, res) => {
-    const { userId } = req.params;
+router.get("/mealLibrary", authenticator.authenticateJWT, async (req, res) => {
+    // ℹ️ "/:userId", ℹ️ old version
+    const userId = authenticator.getUserIdFromToken(req);
 
     try {
         // Join the `USER_MEALS_TABLE` with the `MEALPLANS_TABLE` to fetch the user's meal plans
