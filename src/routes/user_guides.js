@@ -36,7 +36,7 @@ router.get("/load", authenticator.authenticateJWT, async (req, res) => {
 router.post('/add', authenticator.authenticateJWT ,async (req, res) => {
     // const { user_id, guide_id } = req.body;
     const user_id = authenticator.getUserIdFromToken(req);
-    const guide_id = req.guide_id;
+    const guide_id = req.body.guide_id;
 
     console.log("🟠Data received to add 🟠", user_id, guide_id);
 
@@ -58,7 +58,7 @@ router.post('/add', authenticator.authenticateJWT ,async (req, res) => {
 // Delete a guide from USER_GUIDE_TABLE
 router.delete('/delete', authenticator.authenticateJWT ,async (req, res) => {
     const user_id = authenticator.getUserIdFromToken(req);
-    const guide_id = req.guide_id;
+    const guide_id = req.body.guide_id;
 
     if (!user_id || !guide_id) {
         return res.status(400).json({ message: 'user_id and guide_id are required' });
