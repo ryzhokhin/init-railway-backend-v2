@@ -38,6 +38,8 @@ router.post('/add', authenticator.authenticateJWT ,async (req, res) => {
     const user_id = authenticator.getUserIdFromToken(req);
     const guide_id = req.guide_id;
 
+    console.log("🟠Data received to add 🟠", user_id, guide_id);
+
     if (!user_id || !guide_id) {
         return res.status(400).json({ message: 'user_id and guide_id are required' });
     }
