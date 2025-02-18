@@ -44,7 +44,8 @@ const user_guidesRoutes = require('./routes/user_guides');
 const user_mealplansRoutes = require('./routes/user_mealplans');
 const mealsRoutes = require('./routes/mealsRoutes');
 const trainingPlansRoutes = require('./routes/trainingPlansRoutes');
-const authRoutes = require('./management/auth');
+const authRoutes = require('./management/auth')
+const payments = require('./routes/payments');
 
 // Route mounting
 app.use('/test', testRoutes);
@@ -59,6 +60,7 @@ app.use('/user_mealplans', user_mealplansRoutes);
 app.use('/meals', mealsRoutes);
 app.use('/trainings', trainingPlansRoutes);
 app.use('/auth', authRoutes);
+app.use('/payments', payments);
 // Health check endpoint
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'OK' });
