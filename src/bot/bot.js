@@ -49,29 +49,14 @@ bot.on('message', async (msg) => {
 
 
 // ✅ Подтверждение оплаты
-bot.on("pre_checkout_query", async (query) => {
-    await bot.answerPreCheckoutQuery(query.id, true);
-});
+// bot.on("pre_checkout_query", async (query) => {
+//     await bot.answerPreCheckoutQuery(query.id, true);
+// });
 
 // 🎉 Обработка успешной оплаты
 bot.on("successful_payment", async (msg) => {
     const chatId = msg.chat.id;
-    const paymentInfo = msg.successful_payment;
-
-    try {
-        // if (!paymentInfo.invoice_payload) {
-        //     throw new Error("🚨 Ошибка: invoice_payload отсутствует!");
-        // }
-
-        // ✅ Получаем user_id и telegram_id из payload
-        const payload = JSON.parse(paymentInfo.invoice_payload);
-
-        await bot.sendMessage(chatId, `✅ Поздравляем! Вы купили план тренировок 🎉 Теперь он доступен в вашем профиле.`);
-
-    } catch (error) {
-        console.error("❌ Ошибка при обработке покупки:", error);
-        await bot.sendMessage(chatId, "⚠ Ошибка при обработке платежа. Свяжитесь с поддержкой.");
-    }
+    await bot.sendMessage(chatId, `✅ Поздравляем! Вы купили план тренировок 🎉 Теперь он доступен в вашем профиле.`);
 });
 
 console.log("🚀 Bot is running...");
