@@ -49,9 +49,9 @@ bot.on('message', async (msg) => {
 
 
 // ✅ Подтверждение оплаты
-// bot.on("pre_checkout_query", async (query) => {
-//     await bot.answerPreCheckoutQuery(query.id, true);
-// });
+bot.on("pre_checkout_query", async (query) => {
+    await bot.answerPreCheckoutQuery(query.id, true);
+});
 
 // 🎉 Обработка успешной оплаты
 bot.on("successful_payment", async (msg) => {
