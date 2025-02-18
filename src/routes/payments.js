@@ -2,26 +2,33 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/connection');
 const authenticator = require('../management/authMiddleware');
+const axios = require("axios");
 
-router.post("/test-payment", authenticator.authenticateJWT, async (req, res) => {
+const bot = require("../bot/bot"); // ✅ Import your existing bot instance
+
+const BOT_TOKEN = process.env.BOT_TOKEN;
+
+router.post("/test-payment", async (req, res) => {
     try {
-        const { amount, description } = req.body;
-        const userId = authenticator.getUserIdFromToken(req);
+        const { title, description, payload, currency, prices } = req.body;
 
-        console.log(`🔹 Processing test payment: ${amount} Stars for ${userId}`);
+        // ✅ Request Telegram API to generate an invoice link
+        const response = await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/createInvoiceLink`, {
+            title,
+            description,
+            payload,
+            currency,
+            prices
+        });
 
-        // Simulate a successful payment response
-        const paymentResponse = {
-            success: true,
-            message: "Test payment of 1 Telegram Star completed successfully",
-            userId,
-            amount,
-        };
-
-        console.log("✅ Payment Successful:", paymentResponse);
-        res.json(paymentResponse);
+        if (response.data.ok) {
+            const invoiceLink = response.data.result;
+            res.json({ success: true, invoiceLink });
+        } else {
+            res.status(400).json({ success: false, error: response.data.description });
+        }
     } catch (error) {
-        console.error("❌ Test payment processing error:", error);
+        console.error("❌ Error creating invoice link:", error);
         res.status(500).json({ success: false, error: "Internal Server Error" });
     }
 });
