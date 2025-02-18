@@ -46,26 +46,7 @@ bot.on('message', async (msg) => {
 });
 
 
-// ✅ Бот обрабатывает команду покупки (от Mini App)
-bot.on("message", async (msg) => {
-    const chatId = msg.chat.id;
-    const text = msg.text;
 
-    // Проверяем, есть ли запрос на оплату
-    if (text && text.startsWith("PAYMENT_REQUEST|")) {
-        const parts = text.split("|");
-        if (parts.length < 4) {
-            return bot.sendMessage(chatId, "❌ Ошибка: неверный формат запроса.");
-        }
-
-        const price = parseInt(parts[2], 10);
-        const title = parts[3];
-
-
-        // Отправляем инвойс
-        await sendInvoice(chatId, title, price);
-    }
-});
 
 // ✅ Подтверждение оплаты
 bot.on("pre_checkout_query", async (query) => {
@@ -76,8 +57,6 @@ bot.on("pre_checkout_query", async (query) => {
 bot.on("successful_payment", async (msg) => {
     const chatId = msg.chat.id;
     const paymentInfo = msg.successful_payment;
-
-    console.log("✅ Оплата прошла! Данные о платеже:", paymentInfo);
 
     try {
         // if (!paymentInfo.invoice_payload) {
