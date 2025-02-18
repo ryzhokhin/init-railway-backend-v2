@@ -64,11 +64,11 @@ router.get('/get_user_training', authenticator.authenticateJWT, async (req, res)
 });
 
 router.get(
-    "/get_user_workouts/:trainingPlanId/load", authenticator.authenticateJWT,
+    "/get_user_workouts/load", authenticator.authenticateJWT,
     // "/get_user_workouts/:trainingPlanId/:userId", authenticator.authenticateJWT, old thing
     async (req, res) => {
         const userId = authenticator.getUserIdFromToken(req);
-        const trainingPlanId= req.body.trainingPlanId;
+        const trainingPlanId= req.query.trainingPlanId;
 
         try {
             // Step 1: Check if the user has access to the training plan
