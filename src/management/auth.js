@@ -12,13 +12,22 @@ const BOT_TOKEN = process.env.BOT_TOKEN;
 const JWT_SECRET = process.env.JWT_SECRET || "your_super_secret_key";
 const db = require('../db/connection');
 
-async function getDatabaseUserId(telegramId) {
+async function getDatabaseUserId(telegramId, first_name) {
     try {
         const [rows] = await db.execute(
             'SELECT * FROM USERS_TABLE WHERE telegram_ID = ? LIMIT 1',
             [telegramId]
         );
-        return rows.length > 0 ? rows[0] : null;
+
+        if(rows.length === 0) {
+            const [result] = await db.query(
+                'INSERT INTO USERS_TABLE (telegram_ID, first_name, date_registered, date_last_login) VALUES (?, ?, NOW(), NOW())',
+                [telegramId, first_name]
+            );
+            return result.length > 0 ? rows[0] : null;
+        }
+
+        return new Error('Server Error in the auth');
     } catch (error) {
         console.error('Database query error:', error);
         return null;
@@ -69,7 +78,7 @@ router.post('/login', async (req, res) => {
         return res.status(400).json({ error: 'User data is missing in initData' });
     }
 
-    const databaseUserId = await getDatabaseUserId(telegramUser.id);
+    const databaseUserId = await getDatabaseUserId(telegramUser.id, telegramUser.first_name);
     if (!databaseUserId) {
         return res.status(404).json({ error: 'User not found in database' });
     }
