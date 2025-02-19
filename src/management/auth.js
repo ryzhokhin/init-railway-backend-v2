@@ -28,7 +28,7 @@ async function getDatabaseUserId(telegramId, first_name) {
             return result.length > 0 ? result[0] : null;
         }
 
-        return new Error('Server Error in the auth');
+        return rows.length > 0 ? rows[0] : null;
     } catch (error) {
         console.error('Database query error:', error);
         return null;
