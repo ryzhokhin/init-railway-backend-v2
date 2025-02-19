@@ -25,7 +25,11 @@ async function getDatabaseUserId(telegramId, first_name) {
                 [telegramId, first_name]
             );
             console.log("🧽Result from db 🧽",result);
-            return result.length > 0 ? result[0] : null;
+            const [userRow] = await db.query(
+                `SELECT id FROM USERS_TABLE WHERE telegram_ID = ? LIMIT 1`,
+                [telegramId]
+            );
+            return userRow.length > 0 ? result[0] : null;
         }
         await db.query('UPDATE USERS_TABLE SET date_last_login = NOW() WHERE telegram_ID = ?', [telegramId]);
         return rows.length > 0 ? rows[0] : null;
