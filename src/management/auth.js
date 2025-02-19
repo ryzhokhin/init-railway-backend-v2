@@ -75,6 +75,9 @@ router.post('/login', async (req, res) => {
     }
 
     const token = jwt.sign({ userId: databaseUserId }, JWT_SECRET, { expiresIn: '2h' });
+
+    console.log("🔓Login with these creds 🔓", telegramUser);
+
     return res.json({
         message: 'Login successful',
         token,
