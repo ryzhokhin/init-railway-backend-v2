@@ -18,13 +18,14 @@ async function getDatabaseUserId(telegramId, first_name) {
             'SELECT * FROM USERS_TABLE WHERE telegram_ID = ? LIMIT 1',
             [telegramId]
         );
-
+        console.log("💡Rows received 💡", rows);
         if(rows.length === 0) {
             const [result] = await db.query(
                 'INSERT INTO USERS_TABLE (telegram_ID, first_name, date_registered, date_last_login) VALUES (?, ?, NOW(), NOW())',
                 [telegramId, first_name]
             );
-            return result.length > 0 ? rows[0] : null;
+            console.log("🧽Result from db 🧽",result);
+            return result.length > 0 ? result[0] : null;
         }
 
         return new Error('Server Error in the auth');
