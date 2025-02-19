@@ -26,7 +26,7 @@ async function getDatabaseUserId(telegramId, first_name) {
             );
             console.log("🧽Result from db 🧽",result);
             const [userRow] = await db.query(
-                `SELECT id FROM USERS_TABLE WHERE telegram_ID = ? LIMIT 1`,
+                `SELECT * FROM USERS_TABLE WHERE telegram_ID = ? LIMIT 1`,
                 [telegramId]
             );
             return userRow.length > 0 ? result[0] : null;
