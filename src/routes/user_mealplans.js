@@ -3,6 +3,17 @@ const router = express.Router();
 const db = require('../db/connection');
 const authenticator = require("../management/authMiddleware");
 
+/**
+ * Route to save a meal plan for an authenticated user.
+ *
+ * @route POST /mealplans/save-mealplan
+ * @access Protected
+ * @param {string} mealPlanId - The ID of the meal plan to save.
+ * @returns {string} - Confirmation message.
+ * @throws {400} - If userId or mealPlanId is missing.
+ * @throws {409} - If the user already has a meal plan saved.
+ * @throws {500} - If a database error occurs.
+ */
 router.post('/save-mealplan', authenticator.authenticateJWT, async (req, res) => {
     try {
         // const { userId, mealPlanId } = req.body;
@@ -36,7 +47,14 @@ router.post('/save-mealplan', authenticator.authenticateJWT, async (req, res) =>
     }
 });
 
-
+/**
+ * Route to fetch all meal plans associated with the authenticated user.
+ *
+ * @route GET /mealplans/mealLibrary
+ * @access Protected (Requires JWT Token)
+ * @returns {Object[]} - List of user's saved meal plans.
+ * @throws {500} - If a database error occurs.
+ */
 router.get("/mealLibrary", authenticator.authenticateJWT, async (req, res) => {
     // ℹ️ "/:userId", ℹ️ old version
     const userId = authenticator.getUserIdFromToken(req);
@@ -58,6 +76,15 @@ router.get("/mealLibrary", authenticator.authenticateJWT, async (req, res) => {
     }
 });
 
+/**
+ * Route to fetch meal plan days associated with a specific meal plan.
+ *
+ * @route GET /mealplans/days/:mealPlanId
+ * @param {string} mealPlanId - The ID of the meal plan.
+ * @returns {Object[]} - List of meal plan days.
+ * @throws {404} - If no meal plan days are found.
+ * @throws {500} - If a database error occurs.
+ */
 router.get("/days/:mealPlanId", async (req, res) => {
     const { mealPlanId } = req.params;
 

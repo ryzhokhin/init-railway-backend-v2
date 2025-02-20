@@ -3,7 +3,16 @@ const router = express.Router();
 const db = require('../db/connection')
 const authenticator = require("../management/authMiddleware");
 
-//something fixed in this file
+/**
+ * Route to fetch all available guides from the database.
+ *
+ * This route is protected and requires JWT authentication.
+ * If no guides are found, a 404 response is returned.
+ *
+ * @route GET /guides/all
+ * @access Protected (Requires JWT Token)
+ * @returns {Object[]} - Array of guides from the database
+ */
 router.get('/all', authenticator.authenticateJWT, async (req, res) => {
    try{
        const [guides] = await db.query('SELECT * FROM GUIDES_TABLE');
@@ -18,7 +27,3 @@ router.get('/all', authenticator.authenticateJWT, async (req, res) => {
 });
 
 module.exports = router;
-
-
-
-

@@ -7,6 +7,14 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+/**
+ * Retrieves the database user ID for a given Telegram ID.
+ * If the user does not exist, a new record is created.
+ *
+ * @param {number} telegramId - The Telegram ID of the user.
+ * @param {string} first_name - The first name of the user.
+ * @returns {Promise<Object|null>} The database user record or null if an error occurs.
+ */
 const router = express.Router();
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const JWT_SECRET = process.env.JWT_SECRET || "your_super_secret_key";
@@ -40,7 +48,14 @@ async function getDatabaseUserId(telegramId, first_name) {
     }
 }
 
-
+/**
+ * Validates and unpacks Telegram WebApp initData.
+ * Ensures data integrity by verifying the hash.
+ *
+ * @param {string} initDataStr - The URL-encoded initData string from Telegram WebApp.
+ * @returns {Object} Parsed and validated user data.
+ * @throws {Error} If the hash is invalid or missing.
+ */
 function validateAndUnpackInitData(initDataStr) {
     const params = new URLSearchParams(initDataStr);
     const rawData = {};
@@ -68,6 +83,10 @@ function validateAndUnpackInitData(initDataStr) {
     return parsedData;
 }
 
+/**
+ * Login route for Telegram WebApp authentication.
+ * Validates initData, retrieves user from the database, and issues a JWT token.
+ */
 router.post('/login', async (req, res) => {
     const { initData } = req.body;
     if (!initData) return res.status(400).json({ error: 'initData is required' });

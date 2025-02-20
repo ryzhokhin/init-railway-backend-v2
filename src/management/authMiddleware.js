@@ -3,6 +3,16 @@ require('dotenv').config();
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_super_secret_key";
 
+/**
+ * Middleware to authenticate incoming requests using JWT.
+ *
+ * Validates the Bearer token in the Authorization header and extracts user information.
+ * If the token is missing, invalid, or expired, an error response is returned.
+ *
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Function} next - Express next middleware function
+ */
 const authenticateJWT = (req, res, next) => {
     const authHeader = req.headers.authorization;
 
@@ -22,6 +32,12 @@ const authenticateJWT = (req, res, next) => {
     });
 };
 
+/**
+ * Extracts the user ID from the decoded JWT token stored in the request object.
+ *
+ * @param {Object} req - Express request object containing user details
+ * @returns {string|null} - The extracted user ID from the JWT payload
+ */
 const getUserIdFromToken = (req) => {
     return req.user.userId.id; // Extract userId from the decoded JWT
 };

@@ -8,7 +8,25 @@ const bot = require("../bot/bot"); // ✅ Import your existing bot instance
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
 
-router.post("/test-payment", async (req, res) => {
+/**
+ * Route to generate a test payment invoice link using Telegram Stars.
+ *
+ * This endpoint interacts with the Telegram API to create a payment link,
+ * allowing users to make payments via Telegram Stars within the Mini App.
+ *
+ * @route POST /payment/test-payment
+ * @access Protected
+ * @param {string} title - Title of the invoice.
+ * @param {string} description - Description of the purchase.
+ * @param {string} payload - Unique identifier for the payment transaction.
+ * @param {string} currency - Payment currency (must be 'XTR' for Telegram Stars).
+ * @param {Array} prices - Array containing pricing details.
+ * @returns {Object} - JSON response with `invoiceLink` on success or error details.
+ *
+ * @throws {400} - If Telegram API request fails.
+ * @throws {500} - If an internal server error occurs.
+ */
+router.post("/test-payment", authenticator.authenticateJWT, async (req, res) => {
     try {
         const { title, description, payload, currency, prices } = req.body;
 

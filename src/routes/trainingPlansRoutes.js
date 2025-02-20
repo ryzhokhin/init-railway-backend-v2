@@ -3,7 +3,13 @@ const router = express.Router();
 const db = require('../db/connection');
 const authenticator = require('../management/authMiddleware');
 
-// Эндпоинт для получения всех тренировочных планов
+/**
+ * Route to fetch all available training plans.
+ *
+ * @route GET /trainings/training-plans
+ * @returns {Object[]} - List of all training plans from the database.
+ * @throws {500} - If a database error occurs.
+ */
 router.get('/training-plans', async (req, res) => {
     try {
         const [trainingPlans] = await db.query('SELECT * FROM TRAINING_PLANS_TABLE');
@@ -14,6 +20,16 @@ router.get('/training-plans', async (req, res) => {
     }
 });
 
+/**
+ * Route to add a training plan for a user.
+ *
+ * @route POST /trainings/add-training
+ * @access Protected (Requires JWT Token)
+ * @param {string} trainingId - The ID of the training plan to add.
+ * @returns {string} - Confirmation message.
+ * @throws {400} - If user_id or training_id is missing.
+ * @throws {500} - If a database error occurs.
+ */
 router.post('/add-training', authenticator.authenticateJWT, async (req, res) => {
     try {
         const user_id = authenticator.getUserIdFromToken(req);
@@ -37,7 +53,15 @@ router.post('/add-training', authenticator.authenticateJWT, async (req, res) => 
     }
 });
 
-
+/**
+ * Route to fetch the training plans associated with a user.
+ *
+ * @route GET /trainings/get_user_training
+ * @access Protected (Requires JWT Token)
+ * @returns {Object[]} - List of user-specific training plans.
+ * @throws {400} - If user ID is missing.
+ * @throws {500} - If a database error occurs.
+ */
 router.get('/get_user_training', authenticator.authenticateJWT, async (req, res) => {
     try {
         const userId = authenticator.getUserIdFromToken(req);
@@ -63,6 +87,16 @@ router.get('/get_user_training', authenticator.authenticateJWT, async (req, res)
     }
 });
 
+/**
+ * Route to fetch workouts associated with a user's training plan.
+ *
+ * @route GET /trainings/get_user_workouts/load
+ * @access Protected (Requires JWT Token)
+ * @query {string} trainingPlanId - The ID of the training plan.
+ * @returns {Object[]} - List of workouts for the specified training plan.
+ * @throws {404} - If the training plan or workouts are not found.
+ * @throws {500} - If a database error occurs.
+ */
 router.get(
     "/get_user_workouts/load", authenticator.authenticateJWT,
     // "/get_user_workouts/:trainingPlanId/:userId", authenticator.authenticateJWT, old thing
@@ -109,6 +143,16 @@ router.get(
     }
 );
 
+/**
+ * Route to fetch exercises for a specific workout.
+ *
+ * @route GET /trainings/exercises
+ * @query {string} workoutId - The ID of the workout.
+ * @returns {Object[]} - List of exercises for the specified workout.
+ * @throws {400} - If workoutId is not provided.
+ * @throws {404} - If no exercises are found.
+ * @throws {500} - If a database error occurs.
+ */
 router.get('/exercises', async (req, res) => {
     const { workoutId } = req.query; // Get workoutId from the query parameters
 
@@ -138,6 +182,16 @@ router.get('/exercises', async (req, res) => {
     }
 });
 
+/**
+ * Route to fetch repetitions for a specific exercise.
+ *
+ * @route GET /trainings/reps
+ * @query {string} exerciseId - The ID of the exercise.
+ * @returns {Object[]} - List of repetitions for the specified exercise.
+ * @throws {400} - If exerciseId is not provided.
+ * @throws {404} - If no repetitions are found.
+ * @throws {500} - If a database error occurs.
+ */
 router.get("/reps", async (req, res) => {
     const { exerciseId } = req.query;
 

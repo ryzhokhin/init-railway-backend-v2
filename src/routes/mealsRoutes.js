@@ -14,6 +14,20 @@ router.get('/all', authenticator.authenticateJWT, async (req, res) => {
     }
 });
 
+/**
+ * Endpoint to fetch an appropriate meal plan based on calorie intake.
+ *
+ * The user provides their calorie target via a query parameter, and the system
+ * retrieves the closest matching meal plan available in the database.
+ *
+ * @route GET /mealplans/get-mealplan
+ * @query {number} calories - The target calorie intake for selecting a meal plan.
+ * @returns {Object} - The meal plan that best matches the calorie requirement.
+ *
+ * @throws {400} - If no calorie value is provided.
+ * @throws {404} - If no matching meal plan is found.
+ * @throws {500} - If a database or server error occurs.
+ */
 router.get('/:mealPlanDayId', async (req, res) => {
     const { mealPlanDayId } = req.params;
 

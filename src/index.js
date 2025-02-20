@@ -10,12 +10,12 @@ const authenticator = require('./management/authMiddleware');
 
 
 // Middleware for logging (only in development mode)
-app.use((req, res, next) => {
-    console.log('🚀launched');
-    console.log(req.cookies);
-    console.log('🛬landed');
-    next();
-});
+// app.use((req, res, next) => {
+//     console.log('🚀launched');
+//     console.log(req.cookies);
+//     console.log('🛬landed');
+//     next();
+// });
 
 // Middleware setup
 app.use(express.json());

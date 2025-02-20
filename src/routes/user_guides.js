@@ -3,6 +3,15 @@ const router = express.Router();
 const db = require('../db/connection');
 const authenticator = require("../management/authMiddleware");
 
+/**
+ * Route to fetch all guides associated with the authenticated user.
+ *
+ * @route GET /user_guides/load
+ * @access Protected (Requires JWT Token)
+ * @returns {Object[]} - List of guides associated with the user.
+ * @throws {401} - If user ID is missing or invalid.
+ * @throws {500} - If a database error occurs.
+ */
 router.get("/load", authenticator.authenticateJWT, async (req, res) => {
 
     const userId = authenticator.getUserIdFromToken(req);
@@ -32,7 +41,16 @@ router.get("/load", authenticator.authenticateJWT, async (req, res) => {
     }
 });
 
-// Добавление записи в USER_GUIDE_TABLE
+/**
+ * Route to add a guide to the authenticated user's library.
+ *
+ * @route POST /user_guides/add
+ * @access Protected
+ * @param {string} guide_id - The ID of the guide to add.
+ * @returns {string} - Confirmation message.
+ * @throws {400} - If user_id or guide_id is missing.
+ * @throws {500} - If a database error occurs.
+ */
 router.post('/add', authenticator.authenticateJWT ,async (req, res) => {
     // const { user_id, guide_id } = req.body;
     const user_id = authenticator.getUserIdFromToken(req);
@@ -55,7 +73,16 @@ router.post('/add', authenticator.authenticateJWT ,async (req, res) => {
     }
 });
 
-// Delete a guide from USER_GUIDE_TABLE
+/**
+ * Route to remove a guide from the authenticated user's library.
+ *
+ * @route DELETE /user_guides/delete
+ * @access Protected (Requires JWT Token)
+ * @param {string} guide_id - The ID of the guide to remove.
+ * @returns {string} - Confirmation message.
+ * @throws {400} - If user_id or guide_id is missing.
+ * @throws {500} - If a database error occurs.
+ */
 router.delete('/delete', authenticator.authenticateJWT ,async (req, res) => {
     const user_id = authenticator.getUserIdFromToken(req);
     const guide_id = req.body.guide_id;
