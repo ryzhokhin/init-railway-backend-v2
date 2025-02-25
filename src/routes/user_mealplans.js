@@ -36,7 +36,7 @@ router.post('/save-mealplan', authenticator.authenticateJWT, async (req, res) =>
 
         // Если планов нет, добавляем новый
         await db.query(
-            'INSERT INTO USER_MEALS_TABLE (user_id, meal_plan_id, added_date) VALUES (?, ?, NOW())',
+            'INSERT INTO USER_MEALS_TABLE (user_id, meal_plan_id, added_date, expiration_date) VALUES (?, ?, NOW()), DATE_ADD(NOW(), INTERVAL 2 MONTH))',
             [userId, mealPlanId]
         );
 
@@ -65,7 +65,7 @@ router.get("/mealLibrary", authenticator.authenticateJWT, async (req, res) => {
             `SELECT mp.* 
              FROM USER_MEALS_TABLE um
              JOIN MEALPLANS_TABLE mp ON um.meal_plan_id = mp.id
-             WHERE um.user_id = ?`,
+             WHERE um.user_id = ? AND um.expiration_date > NOW()`,
             [userId]
         );
 

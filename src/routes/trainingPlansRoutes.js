@@ -42,7 +42,7 @@ router.post('/add-training', authenticator.authenticateJWT, async (req, res) => 
 
         // Добавление записи в таблицу USER_TRAINING_TABLE
         await db.query(
-            'INSERT INTO USER_TRAINING_TABLE (user_id, training_id, added_date) VALUES (?, ?, NOW())',
+            'INSERT INTO USER_TRAINING_TABLE (user_id, training_id, added_date, expiration_date) VALUES (?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 2 MONTH)))',
             [user_id, training_id]
         );
 
@@ -75,7 +75,7 @@ router.get('/get_user_training', authenticator.authenticateJWT, async (req, res)
       SELECT tp.*
       FROM USER_TRAINING_TABLE ut
       JOIN TRAINING_PLANS_TABLE tp ON ut.training_id = tp.id
-      WHERE ut.user_id = ?;
+      WHERE ut.user_id = ?  AND ut.expiration_date > NOW();
       `,
             [userId]
         );
@@ -110,7 +110,7 @@ router.get(
                 `
         SELECT *
         FROM USER_TRAINING_TABLE
-        WHERE user_id = ? AND training_id = ?
+        WHERE user_id = ? AND training_id = ? AND expiration_date > NOW()
         `,
                 [userId, trainingPlanId]
             );
@@ -124,7 +124,7 @@ router.get(
                 `
         SELECT *
         FROM WORKOUTS_TABLE
-        WHERE training_plan_id = ?
+        WHERE training_plan_id = 
         ORDER BY order_num
         `,
                 [trainingPlanId]
