@@ -36,7 +36,7 @@ async function sendExpirationReminders() {
             SELECT ut.user_id, ut.training_id, u.telegram_ID 
             FROM USER_TRAINING_TABLE ut
             JOIN USERS_TABLE u ON ut.user_id = u.id
-            WHERE ut.expiration_date BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 3 MONTH)
+            WHERE ut.expiration_date BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 3 DAY)
         `);
 
         // ✅ Fetch users with meal plans expiring in 3 days
@@ -44,7 +44,7 @@ async function sendExpirationReminders() {
             SELECT um.user_id, um.meal_plan_id, u.telegram_ID 
             FROM USER_MEALS_TABLE um
             JOIN USERS_TABLE u ON um.user_id = u.id
-            WHERE um.expiration_date BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 3 MONTH)
+            WHERE um.expiration_date BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 3 DAY)
         `);
 
         // 🔹 Send reminders for expiring training plans
