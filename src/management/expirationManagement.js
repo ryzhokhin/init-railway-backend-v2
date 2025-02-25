@@ -90,10 +90,7 @@ cron.schedule("*/1 * * * *", async () => { // Запускается КАЖДУ�
 cron.schedule("0 12 * * *", sendExpirationReminders);
 
 // 🛠 Тестовый запуск вручную
-(async () => {
-    console.log("🛠 Тестовый запуск уведомлений...");
-    await sendExpirationReminders(); // Вызываем функцию вручную
-})();
+
 
 console.log("🔄 Scheduled cleanup for expired plans is running daily at midnight.");
 
