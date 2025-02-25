@@ -81,6 +81,11 @@ async function sendExpirationReminders() {
     }
 }
 
+cron.schedule("*/1 * * * *", async () => { // Запускается КАЖДУЮ минуту (для теста)
+    console.log("⏰ Крон-джоб активирован, вызываю sendExpirationReminders...");
+    await sendExpirationReminders();
+});
+
 // Schedule the task to run every day at 12 PM
 cron.schedule("0 12 * * *", sendExpirationReminders);
 
