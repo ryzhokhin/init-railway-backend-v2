@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config(); // Load environment variables
+require('./management/expirationManagement')
 
 
 const app = express();
