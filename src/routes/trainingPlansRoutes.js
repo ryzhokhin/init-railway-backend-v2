@@ -124,7 +124,7 @@ router.get(
                 `
         SELECT *
         FROM WORKOUTS_TABLE
-        WHERE training_plan_id = 
+        WHERE training_plan_id = ?
         ORDER BY order_num
         `,
                 [trainingPlanId]
