@@ -42,7 +42,7 @@ router.post('/add-training', authenticator.authenticateJWT, async (req, res) => 
 
         // Добавление записи в таблицу USER_TRAINING_TABLE
         await db.query(
-            'INSERT INTO USER_TRAINING_TABLE (user_id, training_id, added_date, expiration_date) VALUES (?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 2 MONTH)))',
+            'INSERT INTO USER_TRAINING_TABLE (user_id, training_id, added_date, expiration_date) VALUES (?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 2 MONTH))',
             [user_id, training_id]
         );
 
