@@ -36,7 +36,7 @@ router.post('/save-mealplan', authenticator.authenticateJWT, async (req, res) =>
 
         // Если планов нет, добавляем новый
         await db.query(
-            'INSERT INTO USER_MEALS_TABLE (user_id, meal_plan_id, added_date, expiration_date) VALUES (?, ?, NOW()), DATE_ADD(NOW(), INTERVAL 2 MONTH))',
+            'INSERT INTO USER_MEALS_TABLE (user_id, meal_plan_id, added_date, expiration_date) VALUES (?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 2 MONTH))',
             [userId, mealPlanId]
         );
 
